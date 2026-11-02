@@ -102,11 +102,9 @@ public class NeighborhoodLibrary {
                                     System.out.println("This book is not checked out.");
                                     System.out.print("\n\n\n\n\n\n");
                                 }
-
                                 break;
                             }
                         }
-
                         if (!found) {
                             System.out.println("Book ID not found.");
                             System.out.print("\n\n\n\n\n");

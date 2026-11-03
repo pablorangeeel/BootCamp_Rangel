@@ -4,9 +4,6 @@ package org.example;
 variables needed for a transaction, such as the date,
 time, amount, and other related information.*/
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 public class Details {
     private String date;
     private String time;

@@ -1,10 +1,6 @@
 package org.example;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +17,8 @@ public class FileManager {
             while ((row = bufferedReader.readLine()) != null) {
                 String[] brokenUpRow = row.split("\\|");
 
-                LocalDate date = LocalDate.parse(brokenUpRow[0]);
-                LocalDateTime time = LocalDateTime.parse(brokenUpRow[1]);
+                String date = brokenUpRow[0];
+                String time = brokenUpRow[1];
                 String description = brokenUpRow[2];
                 String vendor = brokenUpRow[3];
                 float amount = Float.parseFloat(brokenUpRow[4]);
@@ -39,6 +35,33 @@ public class FileManager {
         }
         return detailsList;
     }
+public static void writeTransactions(Details transactions){
+        try {
+            FileWriter fileWriter = new FileWriter("src/main/resources/Transactions.csv", true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
+            String line = String.format("%s|%s|%s|%s|%.2f",
+                    transactions.getDate(),
+                    transactions.getTime(),
+                    transactions.getDescription(),
+                    transactions.getVendor(),
+                    transactions.getAmount());
+
+
+
+            bufferedWriter.write(line);
+            bufferedWriter.newLine();
+
+
+            bufferedWriter.close();
+
+            System.out.println("The transaction has been register successfully");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        catch (Exception ex){
+            System.out.println("There has been an error while writing the file");
+        }
+}
 }
 

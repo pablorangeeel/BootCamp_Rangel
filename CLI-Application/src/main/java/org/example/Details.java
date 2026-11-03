@@ -5,16 +5,16 @@ variables needed for a transaction, such as the date,
 time, amount, and other related information.*/
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Details {
-    private LocalDate date;
-    private LocalDateTime time;
+    private String date;
+    private String time;
     private String description;
     private String vendor;
     private float amount;
 
-    public Details(LocalDate date, LocalDateTime time, String description, String vendor, float amount) {
+    public Details(String date, String time, String description, String vendor, float amount) {
         this.date = date;
         this.time = time;
         this.description = description;
@@ -22,19 +22,19 @@ public class Details {
         this.amount = amount;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public LocalDateTime getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

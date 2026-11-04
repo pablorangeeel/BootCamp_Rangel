@@ -121,6 +121,7 @@ public class Main {
                 case 3:
                     //Ledger
                     Ledger.displayLedger();
+                    running = askToContinue(scanner);
                     break;
                 case 4:
                     running = false;
@@ -128,7 +129,7 @@ public class Main {
                     System.out.println("Please try again");
             }
         }
-        System.out.print("\\e[1mbold\\e[0m======Thanks for visiting us!=====");
-        System.out.print("\t\t\tSEE YOU SOON"+RESET);
+        System.out.print("======T H A N K S   F O R    V I S I T I N G   U S !=====");
+        System.out.print("\t\t\t S E E   Y O U   S O O N ");
     }
 }

@@ -15,7 +15,7 @@ public class FileManager {
             String row;
 
             while ((row = bufferedReader.readLine()) != null) {
-                if (row.startsWith("Date")) {
+                if (row.isBlank() || row.trim().toLowerCase().startsWith("date")) {
                     continue;
                 }
                 String[] brokenUpRow = row.split("\\|");
@@ -56,7 +56,7 @@ public static void writeTransactions(Details transactions){
 
             bufferedWriter.close();
             System.out.println("\u001B[1;32m");
-            System.out.println("The transaction has been register successfully");
+            System.out.println("The transaction has been successfully save into the CSV");
             System.out.println("\u001B[0m");
         } catch (IOException e) {
             throw new RuntimeException(e);

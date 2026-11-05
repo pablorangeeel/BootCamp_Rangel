@@ -25,47 +25,82 @@ public class Reports {
             String vendor,
             double amount
     ) {}
+    public static boolean askToContinue(Scanner scanner) {
+        scanner.nextLine();
+        System.out.print("\u001B[1;36m");
+        System.out.print("\n\tWould you like to see  another list of transactions?");
+        System.out.print("\n\tYES: Menu principal");
+        System.out.print("\n\tNOT: Exit");
+        System.out.print("\n\tEnter an option:   ");
+        scanner.nextLine();
+        String answer = scanner.nextLine();
+        System.out.print("\u001B[0m");
+
+        if (answer.equalsIgnoreCase("yes")) {
+            System.out.print("\u001B[1;35m\tR E D I R E C T I N G ");
+            for (int i = 0; i < 3; i++) {
+                try {
+                    Thread.sleep(700);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.print("."+RESET);
+                System.out.flush();
+            }
+            System.out.println();
+            return true;
+
+        } else {
+            return false;
+        }
+    }
     // REPORTS MENU
     public static void displayReports() {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
         while (running) {
-            System.out.println(BLUE + "\n========== R E P O R T S ==========" + RESET);
-            System.out.println("1) Month to Date");
-            System.out.println("2) Previous Month");
-            System.out.println("3) Year to Date");
-            System.out.println("4) Previous Year");
-            System.out.println("5) Search by Vendor");
-            System.out.println("6) Custom Search");
-            System.out.println("0) Back to Ledger");
-            System.out.print(GREEN + "\nPlease select an option: " + RESET);
+            System.out.println(BLUE + "\n\t===================== R E P O R T S =====================" + RESET);
+            System.out.println("\t1) Month to Date");
+            System.out.println("\t2) Previous Month");
+            System.out.println("\t3) Year to Date");
+            System.out.println("\t4) Previous Year");
+            System.out.println("\t5) Search by Vendor");
+            System.out.println("\t6) Custom Search");
+            System.out.println("\t0) Back to Ledger");
+            System.out.print(GREEN + "\n\tPlease select an option: " + RESET);
             String input = scanner.nextLine();
             int choice;
             try {
                 choice = Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                System.out.println(RED + "Please enter a valid number." + RESET);
+                System.out.println(RED + "\tPlease enter a valid number." + RESET);
                 continue;
             }
 
             switch (choice) {
                 case 1:
                     monthToDate();
+                    running = askToContinue(scanner);
                     break;
                 case 2:
                     previousMonth();
+                    running = askToContinue(scanner);
                     break;
                 case 3:
                     yearToDate();
+                    running = askToContinue(scanner);
                     break;
                 case 4:
                     previousYear();
+                    running = askToContinue(scanner);
                     break;
                 case 5:
                     searchByVendor(scanner);
+                    running = askToContinue(scanner);
                     break;
                 case 6:
                     customSearch(scanner);
+                    running = askToContinue(scanner);
                     break;
                 case 0:
                     running = false;
@@ -90,10 +125,8 @@ public class Reports {
             }
 
             for (String line : Files.readAllLines(path)) {
-                if (line.isBlank()) {
-                    if (line.trim().toLowerCase().startsWith("date")) {
-                        continue;
-                    }
+                if (line.isBlank() ||
+                        line.trim().toLowerCase().startsWith("date")) {
                     continue;
                 }
 
@@ -138,7 +171,7 @@ public class Reports {
         LocalDate today = LocalDate.now();
         LocalDate start = today.withDayOfMonth(1);
 
-        showDateRange("MONTH TO DATE", start, today);
+        showDateRange(" M O N T H   T O   D A T E ", start, today);
     }
 
     // PREVIOUS MONTH
@@ -147,7 +180,7 @@ public class Reports {
         LocalDate start = lastMonth.withDayOfMonth(1);
         LocalDate end = lastMonth.withDayOfMonth(lastMonth.lengthOfMonth());
 
-        showDateRange("PREVIOUS MONTH", start, end);
+        showDateRange(" P R E V I O U S   M O N T H ", start, end);
     }
 
     // YEAR TO DATE
@@ -155,7 +188,7 @@ public class Reports {
         LocalDate today = LocalDate.now();
         LocalDate start = today.withDayOfYear(1);
 
-        showDateRange("YEAR TO DATE", start, today);
+        showDateRange(" Y E A R   T O   D A T E ", start, today);
     }
 
     // PREVIOUS YEAR
@@ -164,7 +197,7 @@ public class Reports {
         LocalDate start = lastYear.withDayOfYear(1);
         LocalDate end = lastYear.withDayOfYear(lastYear.lengthOfYear());
 
-        showDateRange("PREVIOUS YEAR", start, end);
+        showDateRange(" P R E V I O U S   Y E A R ", start, end);
     }
 
     // DATE RANGE FILTER
@@ -198,12 +231,12 @@ public class Reports {
             }
         }
 
-        displayTransactions("VENDOR SEARCH", results);
+        displayTransactions(" V E N D O R   S E A R C H ", results);
     }
 
     // CUSTOM SEARCH
     private static void customSearch(Scanner scanner) {
-        System.out.println(BLUE + "\n========== C U S T O M   S E A R C H ==========" + RESET);
+        System.out.println(BLUE + "\n================== C U S T O M   S E A R C H ==================" + RESET);
         System.out.println("Leave any field blank to skip that filter.");
 
         LocalDate startDate = readDate(scanner, "Start date (MM/dd/yyyy): ");
@@ -292,7 +325,7 @@ public class Reports {
     private static void displayTransactions(
             String title, List<Transaction> transactions) {
 
-        System.out.println(BLUE + "\n========== " + title
+        System.out.println(BLUE + "\n\t========== " + title
                 + " ==========" + RESET);
 
         if (transactions.isEmpty()) {

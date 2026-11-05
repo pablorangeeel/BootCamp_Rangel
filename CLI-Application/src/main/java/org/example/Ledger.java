@@ -10,26 +10,28 @@ public class Ledger {
     public static final String GREEN = "\u001B[32m";
     public static final String RESET = "\u001B[0m";
     public static final String PURPLE = "\u001B[35m";
+    public static final String BoldPURPLE = "\u001B[1;35m";
     public static final String BoldGreen = "\u001B[1;92m";
 
     public static boolean askToContinue(Scanner scanner) {
-        System.out.print("\u001B[32m");
-        System.out.print("\nWould you like to make another transaction?");
-        System.out.print("\nYES: Menu principal");
-        System.out.print("\nNOT: Exit");
-        System.out.print("\nEnter an option:   ");
+        scanner.nextLine();
+        System.out.print("\u001B[1;36m");
+        System.out.print("\n\tWould you like to see  another list of transactions?");
+        System.out.print("\n\tYES: Menu principal");
+        System.out.print("\n\tNOT: Exit");
+        System.out.print("\n\tEnter an option:   ");
         String answer = scanner.nextLine();
         System.out.print("\u001B[0m");
 
         if (answer.equalsIgnoreCase("yes")) {
-            System.out.print("Redirecting");
+            System.out.print(BoldPURPLE+"\tR E D I R E C T I N G ");
             for (int i = 0; i < 3; i++) {
                 try {
                     Thread.sleep(700);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                System.out.print(".");
+                System.out.print("."+RESET);
                 System.out.flush();
             }
             System.out.println();
@@ -87,17 +89,17 @@ public class Ledger {
                         )
         ).reversed());
         boolean foundDeposit = false;
-        System.out.println("\n========== D E P O S I T S ==========");
+        System.out.println("\n==================== D E P O S I T S =====================");
         for (Details transaction : transactions) {
             if (transaction.getAmount() > 0) {
                 foundDeposit = true;
-                System.out.printf("Date: %s%n", transaction.getDate());
-                System.out.printf("Time: %s%n", transaction.getTime());
-                System.out.printf("Description: %s%n", transaction.getDescription());
-                System.out.printf("Vendor: %s%n", transaction.getVendor());
-                System.out.printf("Amount:"+GREEN + " $%.2f%n" + RESET,
+                System.out.printf("\tDate: %s%n", transaction.getDate());
+                System.out.printf("\tTime: %s%n", transaction.getTime());
+                System.out.printf("\tDescription: %s%n", transaction.getDescription());
+                System.out.printf("\tVendor: %s%n", transaction.getVendor());
+                System.out.printf("\tAmount:"+GREEN + " $%.2f%n" + RESET,
                         transaction.getAmount());
-                System.out.println("----------------------------------");
+                System.out.println("\t----------------------------------");
             }
         }
         if (!foundDeposit) {
@@ -106,15 +108,26 @@ public class Ledger {
     }
     public static void showPayments() {
         List<Details> transactions = FileManager.readTransactions();
-        System.out.println("\n========== P A Y M E N T S ==========");
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
+        transactions.sort(Comparator.comparing(
+                (Details transaction) ->
+                        LocalDateTime.parse(
+                                transaction.getDate().trim() + " " +
+                                        transaction.getTime().trim(),
+                                formatter
+                        )
+        ).reversed());
+
+        System.out.println("\n\t==================== P A Y M E N T S ======================");
         for (Details transaction : transactions) {
             if (transaction.getAmount() < 0) {
-                System.out.printf("Date: %s%n", transaction.getDate());
-                System.out.printf("Time: %s%n", transaction.getTime());
-                System.out.printf("Description: %s%n", transaction.getDescription());
-                System.out.printf("Vendor: %s%n", transaction.getVendor());
-                System.out.printf("Amount:"+RED + "$%.2f%n" + RESET, transaction.getAmount());
-                System.out.println("--------------------------------------");
+                System.out.printf("\tDate: %s%n", transaction.getDate());
+                System.out.printf("\tTime: %s%n", transaction.getTime());
+                System.out.printf("\tDescription: %s%n", transaction.getDescription());
+                System.out.printf("\tVendor: %s%n", transaction.getVendor());
+                System.out.printf("\tAmount:"+RED + "$%.2f%n" + RESET, transaction.getAmount());
+                System.out.println("\t--------------------------------------");
             }
         }
     }
@@ -123,19 +136,18 @@ public class Ledger {
         boolean running = true;
 
         while (running) {
-            System.out.print(PURPLE + "\n\n\n\n\n\n\t========== LEDGER============" + RESET);
-            System.out.print(GREEN +"\n1. All transactions");
-            System.out.print("\n2. Deposits");
-            System.out.print("\n3. Payments");
-            System.out.print("\n4. Reports");
-            System.out.print("\n5. Back to main menu");
-            System.out.print(BoldGreen + "\t\nPlease select and options: " + RESET);
+            System.out.print(PURPLE + "\n\n\n\n\n\n\t\t============== L E D G E R ================" + RESET);
+            System.out.print(GREEN +"\n\t1. All transactions");
+            System.out.print("\n\t2. Deposits");
+            System.out.print("\n\t3. Payments");
+            System.out.print("\n\t4. Reports");
+            System.out.print("\n\t5. Back to main menu");
+            System.out.print(BoldGreen + "\n\tPlease select and options: " + RESET);
             int r = scanner.nextInt();
             switch (r) {
                 case 1:
                     //All transactions
                     showAllTransactions();
-                    scanner.nextLine();
                     running = askToContinue(scanner);
                     break;
                 case 2:
@@ -151,7 +163,6 @@ public class Ledger {
                 case 4:
                     //reports
                     Reports.displayReports();
-                    running = askToContinue(scanner);
                     break;
                 case 5:
                     running = false;

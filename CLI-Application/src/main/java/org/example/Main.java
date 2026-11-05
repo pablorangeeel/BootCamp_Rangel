@@ -4,18 +4,17 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 public class Main {
-
     public static boolean askToContinue(Scanner scanner) {
         System.out.print("\u001B[32m");
-        System.out.print("\nWould you like to make another transaction?");
-        System.out.print("\nYES: Menu principal");
-        System.out.print("\nNOT: Exit");
-        System.out.print("\nEnter an option:   ");
+        System.out.print("\n\t\tWould you like to make another transaction?");
+        System.out.print("\n\tYES: Menu principal");
+        System.out.print("\n\tNOT: Exit");
+        System.out.print("\n\tEnter an option:   ");
         String answer = scanner.nextLine();
         System.out.print("\u001B[0m");
 
         if (answer.equalsIgnoreCase("yes")) {
-            System.out.print("Redirecting");
+            System.out.print("\u001B[1;35m\tR E D I R E C T I N G ");
             for (int i = 0; i < 3; i++) {
                 try {
                     Thread.sleep(700);
@@ -25,14 +24,14 @@ public class Main {
                 System.out.print(".");
                 System.out.flush();
             }
-            System.out.println();
+            System.out.println("\u001B[0m");
             return true;
 
         } else {
             return false;
         }
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Scanner scanner = new Scanner(System.in);
 
         String PURPLE = "\u001B[35m";
@@ -84,15 +83,15 @@ public class Main {
             switch (choice) {
                 case 1:
                     //Add deposit
-                    System.out.print(BLUE + "\t=== A D D  D E P O S I T ===\n" + RESET);
+                    System.out.print(BLUE + "\n\n\n\n\t========= A D D  D E P O S I T =========\n" + RESET);
 
-                    System.out.print("\nEnter description: ");
+                    System.out.print(BLUE+"\n\tEnter description: ");
                     String description = scanner.nextLine();
 
-                    System.out.print("\nEnter vendor: ");
+                    System.out.print("\n\tEnter vendor: ");
                     String vendor = scanner.nextLine();
 
-                    System.out.print("\nEnter deposit amount:  $");
+                    System.out.print("\n\tEnter deposit amount:  $"+RESET);
                     float amount = scanner.nextFloat();
 
                     Details deposit = new Details(formatDate, formatTime, description, vendor, amount);
@@ -125,11 +124,29 @@ public class Main {
                     break;
                 case 4:
                     running = false;
+                    break;
                 default:
                     System.out.println("Please try again");
+                    break;
             }
         }
-        System.out.print("======T H A N K S   F O R    V I S I T I N G   U S !=====");
-        System.out.print("\t\t\t S E E   Y O U   S O O N ");
+
+        System.out.println(BLUE+"\n\n\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\tLogging out");
+        Thread.sleep(700);
+        System.out.print("\t\t\t\t\t\t.");
+        Thread.sleep(500);
+        System.out.print("\t.");
+        Thread.sleep(500);
+        System.out.println("\t.");
+        Thread.sleep(1000);
+        System.out.println("\n\t\t\t======================================");
+        Thread.sleep(500);
+        System.out.println("\t\t\t    THANKS FOR VISITING US!");
+        Thread.sleep(1000);
+        System.out.println("\t\t\t       SEE YOU SOON!");
+        Thread.sleep(1000);
+        System.out.println("\t\t\t======================================");
+        Thread.sleep(700);
+        System.out.println("\n\t\t\t\t\tGoodbye! 👋"+RESET);
     }
 }

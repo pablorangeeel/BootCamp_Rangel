@@ -38,14 +38,12 @@ public class Main {
         String GREEN = "\u001B[32m";
         String BoldGreen = "\u001B[1;92m";
         String BLUE = "\u001B[36m";
-        String BoldBlue = "\u001B[1;34m";
         String RESET = "\u001B[0m";
-        String CLEANTERMINAL = "\033[H\033[2J";
         System.out.println();
 
 
         System.out.print(PURPLE + "\n\t==================================================\n");
-        System.out.print("\tW E L C O M E   T O  T H E   B a n k i n g  A p p \n");
+        System.out.print("\t\t\t\t\t\tW E L C O M E  \n");
         System.out.print("\t==================================================\n"+ RESET);
         System.out.print("\tThis application allows you to manage\n");
         System.out.print("\tdeposit records and save them to a CSV file.\n");

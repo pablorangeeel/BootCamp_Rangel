@@ -126,7 +126,6 @@ public class Dealership {
 
         return results;
     }
-
     public List<Vehicle> getAllVehicles() {
         return inventory;
     }

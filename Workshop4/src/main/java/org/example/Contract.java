@@ -52,9 +52,9 @@ public abstract class Contract {
     public abstract BigDecimal getMonthlyPayment();
 
     protected static BigDecimal calculatePayment(BigDecimal total, double annualRate, int months) {
-        double monthlyRate = annualRate / 12;
+        double monthlyRate = annualRate / 12; //it assigns the value of divide yearly rate  by 12 to the monthly rate variable
         double payment = total.doubleValue() * monthlyRate
-                / (1 - Math.pow(1 + monthlyRate, -months));
+                / (1 - Math.pow(1 + monthlyRate, -months)); //This is the math with the price of the car to calculate the monthly payments.
         return BigDecimal.valueOf(payment).setScale(2, RoundingMode.HALF_UP);
     }
 }

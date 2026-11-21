@@ -1,6 +1,9 @@
 package org.example;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -27,6 +30,7 @@ public class UserInterface {
             System.out.println("7 - List all vehicles");
             System.out.println("8 - Add a vehicle");
             System.out.println("9 - Remove a vehicle");
+            System.out.println("10 - Sell or lease a vehicle");
             System.out.println("99 - Quit");
 
             System.out.print("\nEnter your choice: ");
@@ -104,7 +108,7 @@ public class UserInterface {
 
                 case "8" -> System.out.println("Add vehicle");
                 case "9" -> System.out.println("Remove vehicle");
-
+                case "10" -> sellOrLeaseVehicle();
                 case "99" -> {
                     System.out.println("Thank you for visiting!");
                     running = false;
@@ -114,7 +118,95 @@ public class UserInterface {
             }
         }
     }
+    private void sellOrLeaseVehicle() {
+        System.out.print("Enter the vehicle VIN: ");
+        int vin;
+        try {
+            vin = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Enter a numeric VIN from the inventory list.");
+            return;
+        }
 
+        Vehicle selectedVehicle = null;
+        for (Vehicle vehicle : dealership.getAllVehicles()) {
+            if (vehicle.getVin() == vin) {
+                selectedVehicle = vehicle;
+                break;
+            }
+        }
+
+        if (selectedVehicle == null) {
+            System.out.println("No vehicle found with that VIN.");
+            return;
+        }
+
+        System.out.print("Enter SALE or LEASE: ");
+        String type = scanner.nextLine().trim();
+        boolean isSale = type.equalsIgnoreCase("SALE");
+        boolean isLease = type.equalsIgnoreCase("LEASE");
+
+        if (!isSale && !isLease) {
+            System.out.println("Enter SALE or LEASE.");
+            return;
+        }
+
+        LocalDate today = LocalDate.now();
+        if (isLease && today.getYear() - selectedVehicle.getYear() > 3) {
+            System.out.println("Vehicles more than three model years old cannot be leased.");
+            return;
+        }
+
+        System.out.print("Customer name: ");
+        String name = scanner.nextLine().trim();
+        System.out.print("Customer email: ");
+        String email = scanner.nextLine().trim();
+        if (name.isEmpty() || email.isEmpty()) {
+            System.out.println("Enter both a customer name and email.");
+            return;
+        }
+
+        String date = today.format(DateTimeFormatter.BASIC_ISO_DATE);
+        Contract contract;
+
+        if (isSale) {
+            System.out.print("Finance this sale? (YES/NO): ");
+            String answer = scanner.nextLine().trim();
+            boolean financed = answer.equalsIgnoreCase("YES");
+            if (!financed && !answer.equalsIgnoreCase("NO")) {
+                System.out.println("Enter YES or NO.");
+                return;
+            }
+            contract = new SalesContract(date, name, email, selectedVehicle, financed);
+        } else {
+            contract = new LeaseContract(date, name, email, selectedVehicle);
+        }
+
+        System.out.printf("Total: $%.2f%n", contract.getTotalPrice());
+        System.out.printf("Monthly payment: $%.2f%n", contract.getMonthlyPayment());
+        System.out.print("Save this contract? (YES/NO): ");
+        if (!scanner.nextLine().trim().equalsIgnoreCase("YES")) {
+            System.out.println("Contract canceled.");
+            return;
+        }
+
+        try {
+            ContractDataManager.saveContract(contract);
+        } catch (IOException e) {
+            System.out.println("Could not save the contract: " + e.getMessage());
+            return;
+        }
+
+        dealership.removeVehicle(selectedVehicle);
+        try {
+            DealershipFileManager.saveDealership(dealership);
+            System.out.println("Contract saved and vehicle removed from inventory.");
+        } catch (IllegalStateException e) {
+            System.out.println("Contract was saved, but cars.csv could not be updated.");
+            System.out.println("Retry saving the inventory or reconcile VIN " + vin
+                    + " in cars.csv before restarting. Do not record the contract again.");
+        }
+    }
     private void show(List<Vehicle> vehicles) {
 
         if (vehicles.isEmpty()) {

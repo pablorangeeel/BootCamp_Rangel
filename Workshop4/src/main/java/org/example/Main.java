@@ -4,6 +4,5 @@ public class Main {
 
         UserInterface userInterface = new UserInterface();
         userInterface.display();
-
     }
     }
